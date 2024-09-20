@@ -1,17 +1,29 @@
-import * as React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
-import IconButton from "@mui/joy/IconButton";
 import Typography from "@mui/joy/Typography";
-import BookmarkAdd from "@mui/icons-material/BookmarkAddOutlined";
 import AssignmentsNavbar from "./AssignmentsNavbar";
 import { Box } from "@mui/material";
 import BannerBackground from "../Assets/home-banner-background.png";
 import Divider from "@mui/material/Divider";
 
+import Image11 from "../Assets/11.svg";
+import Image12 from "../Assets/12.svg";
+import Image13 from "../Assets/13.svg";
+
+const images = [Image11, Image12, Image13];
+
 export default function Assignments() {
+  const [subjects, setSubjects] = useState([]);
+
+  const addSubject = (newSubject) => {
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+    setSubjects([...subjects, { ...newSubject, image: randomImage }]);
+  };
+
   return (
     <Box
       sx={{
@@ -34,49 +46,82 @@ export default function Assignments() {
           height: "100%",
         }}
       />
-      <AssignmentsNavbar sx={{ position: "relative", zIndex: 2 }} />
+      <AssignmentsNavbar
+        addSubject={addSubject}
+        sx={{ position: "relative", zIndex: 2 }}
+      />
       <Divider
-        sx={{ width: "100%", borderBottomWidth: 2, margin: "0 70px 0 90px" }} // Increased width and line thickness
+        sx={{ width: "100%", borderBottomWidth: 2, margin: "0 70px 0 90px" }}
       />
       <Box
         sx={{
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "center",
           padding: "2rem",
           position: "relative",
           zIndex: 1,
         }}
       >
-        {[1, 2, 3, 4].map((item) => (
-          <Card key={item} sx={{ width: 320, marginRight: "2rem" }}>
-            <div>
-              <Typography level="title-lg">Yosemite National Park</Typography>
-              <Typography level="body-sm">April 24 to May 02, 2021</Typography>
-            </div>
-            <AspectRatio minHeight="120px" maxHeight="200px">
+        {subjects.map((subject, index) => (
+          <Card
+            key={index}
+            sx={{
+              width: 320,
+              marginRight: "2rem",
+              marginBottom: "2rem",
+              overflow: "hidden",
+              padding: "0",
+            }}
+          >
+            <CardContent>
+              <Typography
+                level="h2"
+                fontSize="lg"
+                fontWeight="lg"
+                margin="15px 10px 10px 20px"
+              >
+                {subject.subjectName}
+              </Typography>
+            </CardContent>
+            <AspectRatio minHeight="200px" maxHeight="200px">
               <img
-                src="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286"
-                srcSet="https://images.unsplash.com/photo-1527549993586-dff825b37782?auto=format&fit=crop&w=286&dpr=2 2x"
-                loading="lazy"
-                alt=""
+                src={subject.image}
+                alt={subject.subjectName}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
             </AspectRatio>
-            <CardContent orientation="horizontal">
-              <div>
-                <Typography level="body-xs">Total price:</Typography>
-                <Typography sx={{ fontSize: "lg", fontWeight: "lg" }}>
-                  $2,900
-                </Typography>
-              </div>
-              <Button
-                variant="solid"
-                size="md"
-                color="primary"
-                aria-label="Explore Bahamas Islands"
-                sx={{ ml: "auto", alignSelf: "center", fontWeight: 600 }}
+            <CardContent
+              orientation="horizontal"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                margin: "10px 20px 10px 20px",
+              }}
+            >
+              <Typography
+                level="body-md"
+                sx={{
+                  color: "red",
+                  fontWeight: "bold",
+                }}
               >
-                Explore
-              </Button>
+                Total Due: 2
+              </Typography>
+              <Link
+                to={`/assignments/${index}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Button
+                  variant="solid"
+                  size="md"
+                  color="primary"
+                  aria-label="View Details"
+                >
+                  View Details
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         ))}
