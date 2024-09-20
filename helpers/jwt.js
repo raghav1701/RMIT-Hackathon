@@ -1,5 +1,5 @@
+require("dotenv").config();
 const expressJwt = require("express-jwt");
-const config = require("../config.json");
 const db = require("../helpers/db");
 
 function jwt(roles = []) {

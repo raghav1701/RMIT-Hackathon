@@ -1,5 +1,5 @@
+require("dotenv").config();
 const expressJwt = require("express-jwt");
-const config = require("../config.json");
 const jwt = require("jsonwebtoken");
 
 const authenticationMiddleware = (req, res, next) => {
@@ -11,7 +11,7 @@ const authenticationMiddleware = (req, res, next) => {
       .json({ message: "Access denied. No token provided." });
   }
 
-  jwt.verify(token, config.secret, (err, decoded) => {
+  jwt.verify(token, process.env.secret, (err, decoded) => {
     if (err) {
       return res.status(401).json({ message: "Invalid token." });
     }
