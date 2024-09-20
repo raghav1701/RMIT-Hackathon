@@ -20,4 +20,6 @@ mongoose.Promise = global.Promise;
 
 module.exports = {
   User: require("../models/user"),
+  Subject: require("../models/subject"),
+  Assignment: require("../models/assignment"),
 };

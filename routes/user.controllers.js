@@ -1,21 +1,29 @@
 const express = require("express");
 const router = express.Router();
 const userServices = require("../services/user.services");
-const Role = require("../helpers/role");
+const subjectServices = require("../services/subject.services");
+const assignmentServices = require("../services/assignment.services");
 const jwt = require("../helpers/jwt");
 const sendEmail = require("../helpers/email");
 
 //routes
+router.get("/fetchsubjects", jwt(), getSubjects);
+router.get("/fetchassignments", jwt(), getAssignments);
 router.post("/login", login);
 router.post("/register", register);
 router.get("/current", jwt(), getCurrent);
 router.get("/:id", getById);
 router.post("/summary", summary);
 
+// routes for subjects
+router.post("/addsubject", jwt(), createSubject);
+
+// routes for assignments
+router.post("/addassignment", jwt(), createAssignment);
+
 module.exports = router;
 
 function register(req, res, next) {
-  console.log("ok");
   userServices
     .register(req.body)
     .then((user) =>
@@ -93,4 +101,52 @@ async function summary(req, res, next) {
       error: error.message,
     });
   }
+}
+
+function createSubject(req, res, next) {
+  const userId = req.user._id;
+  const { name } = req.body;
+  console.log("okok", name, userId);
+  subjectServices
+    .create(name, userId)
+    .then((subject) => res.json(subject))
+    .catch((err) => {
+      console.error("Error creating subject:", err);
+      res
+        .status(500)
+        .json({ message: "Error creating subject", error: err.message });
+    });
+}
+
+function getSubjects(req, res, next) {
+  const userId = req.user._id;
+
+  subjectServices
+    .getAll(userId)
+    .then((subjects) => res.json(subjects))
+    .catch((error) => {
+      console.error("Error fetching subjects:", error);
+      res
+        .status(500)
+        .json({ message: "Error fetching subjects", error: error.message });
+    });
+}
+
+function createAssignment(req, res, next) {
+  assignmentServices
+    .create(req.body, req.user._id)
+    .then((assignment) =>
+      res.json({
+        assignment: assignment,
+        message: `Assignment created successfully`,
+      })
+    )
+    .catch((error) => next(error));
+}
+
+function getAssignments(req, res, next) {
+  assignmentServices
+    .getAll(req.user._id)
+    .then((assignments) => res.json(assignments))
+    .catch((error) => next(error));
 }
