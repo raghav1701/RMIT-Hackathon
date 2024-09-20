@@ -1,15 +1,20 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { useState } from "react";
-import SubjectPopup from "./SubjectPopup";
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import { useAuth } from "../AuthContext";
 
-export default function AssignmentsNavbar({ addSubject }) {
+export default function SubjectAssignmentNavbar({ addSubject }) {
   const [open, setOpen] = useState(false);
+  const [newSubject, setNewSubject] = useState("");
+  const { user } = useAuth();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -17,55 +22,56 @@ export default function AssignmentsNavbar({ addSubject }) {
 
   const handleClose = () => {
     setOpen(false);
+    setNewSubject("");
+  };
+
+  const handleAddSubject = () => {
+    if (newSubject.trim()) {
+      addSubject({ name: newSubject.trim() });
+      handleClose();
+    }
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="static"
-        sx={{ backgroundColor: "white", color: "black", paddingTop: "25px" }}
-        elevation={0}
-      >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{
-                color: "black",
-                fontSize: "2.5rem",
-                fontWeight: "600",
-                marginLeft: "70px",
-              }}
-            >
-              Assignments Tracker
-            </Typography>
-          </Link>
-          <Button
-            color="inherit"
-            onClick={handleClickOpen}
-            sx={{
-              marginRight: "70px",
-              padding: "0.9rem 1.75rem",
-              backgroundColor: "white",
-              outline: "none",
-              border: "none",
-              borderRadius: "5rem",
-              fontSize: "1.1rem",
-              cursor: "pointer",
-              fontWeight: "600",
-              transition: "0.2s",
-            }}
-          >
-            Add Subject
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "1rem 2rem",
+      }}
+    >
+      <Typography variant="h5" fontWeight="bold">
+        My Subjects
+      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Typography sx={{ marginRight: "1rem" }}>
+          Welcome, {user?.firstName || "User"}
+        </Typography>
+        <Button variant="contained" color="primary" onClick={handleClickOpen}>
+          Add Subject
+        </Button>
+      </Box>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add New Subject</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Subject Name"
+            fullWidth
+            value={newSubject}
+            onChange={(e) => setNewSubject(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleAddSubject} color="primary">
+            Add
           </Button>
-        </Toolbar>
-      </AppBar>
-      <SubjectPopup
-        open={open}
-        handleClose={handleClose}
-        addSubject={addSubject}
-      />
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

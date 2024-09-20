@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
-import AssignmentsNavbar from "./AssignmentsNavbar";
-import { Box } from "@mui/material";
+import SubjectAssignmentNavbar from "./AssignmentsNavbar";
+import { Box, CircularProgress } from "@mui/material";
 import BannerBackground from "../Assets/home-banner-background.png";
 import Divider from "@mui/material/Divider";
+import { useAuth } from "../AuthContext";
 
 import Image11 from "../Assets/11.svg";
 import Image12 from "../Assets/12.svg";
@@ -16,13 +17,67 @@ import Image13 from "../Assets/13.svg";
 
 const images = [Image11, Image12, Image13];
 
-export default function Assignments() {
+export default function Subjects() {
   const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
-  const addSubject = (newSubject) => {
-    const randomImage = images[Math.floor(Math.random() * images.length)];
-    setSubjects([...subjects, { ...newSubject, image: randomImage }]);
+  useEffect(() => {
+    fetchSubjects();
+  }, []);
+
+  const fetchSubjects = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:4100/users/fetchsubjects",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (!response.ok) throw new Error("Failed to fetch subjects");
+      const data = await response.json();
+      setSubjects(
+        data.map((subject) => ({
+          ...subject,
+          image: images[Math.floor(Math.random() * images.length)],
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching subjects:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const addSubject = async (newSubject) => {
+    try {
+      const response = await fetch("http://localhost:4100/users/addsubject", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(newSubject),
+      });
+      if (!response.ok) throw new Error("Failed to add subject");
+      const addedSubject = await response.json();
+      setSubjects([
+        ...subjects,
+        {
+          ...addedSubject,
+          image: images[Math.floor(Math.random() * images.length)],
+        },
+      ]);
+    } catch (error) {
+      console.error("Error adding subject:", error);
+    }
+  };
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <Box
@@ -46,7 +101,7 @@ export default function Assignments() {
           height: "100%",
         }}
       />
-      <AssignmentsNavbar
+      <SubjectAssignmentNavbar
         addSubject={addSubject}
         sx={{ position: "relative", zIndex: 2 }}
       />
@@ -63,9 +118,9 @@ export default function Assignments() {
           zIndex: 1,
         }}
       >
-        {subjects.map((subject, index) => (
+        {subjects.map((subject) => (
           <Card
-            key={index}
+            key={subject._id}
             sx={{
               width: 320,
               marginRight: "2rem",
@@ -81,13 +136,13 @@ export default function Assignments() {
                 fontWeight="lg"
                 margin="15px 10px 10px 20px"
               >
-                {subject.subjectName}
+                {subject.name}
               </Typography>
             </CardContent>
             <AspectRatio minHeight="200px" maxHeight="200px">
               <img
                 src={subject.image}
-                alt={subject.subjectName}
+                alt={subject.name}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
             </AspectRatio>
@@ -107,10 +162,10 @@ export default function Assignments() {
                   fontWeight: "bold",
                 }}
               >
-                Total Due: 2
+                Total Due: {subject.assignmentsCount || 0}
               </Typography>
               <Link
-                to={`/assignments/${index}`}
+                to={`/subjects/${subject.id}`}
                 style={{ textDecoration: "none" }}
               >
                 <Button

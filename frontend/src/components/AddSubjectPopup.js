@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 
-export default function SubjectPopup({ open, handleClose, addSubject }) {
+export default function AddSubjectPopup({ open, handleClose, addSubject }) {
   const [subjectName, setSubjectName] = useState("");
 
   const handleSubmit = () => {

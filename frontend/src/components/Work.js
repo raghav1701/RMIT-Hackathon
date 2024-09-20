@@ -13,7 +13,7 @@ const Work = () => {
       image: PickMeals,
       title: "Pick Meals",
       text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et sagittis duis elementum interdum facilisi bibendum.",
-      route: "/pick-meals", // Route for navigation
+      route: "/subjects", // Route for navigation
     },
     {
       image: ChooseMeals,

@@ -18,7 +18,19 @@ async function getAll(userId) {
   return await Assignment.find({ user: userId }).populate("subjectId");
 }
 
+async function getBySubject(subjectId, userId) {
+  try {
+    return await Assignment.find({
+      subjectId: subjectId,
+      user: userId,
+    }).populate("subjectId");
+  } catch (error) {
+    throw new Error(`Error fetching assignments for subject: ${error.message}`);
+  }
+}
+
 module.exports = {
   create,
   getAll,
+  getBySubject, // Export the new function
 };

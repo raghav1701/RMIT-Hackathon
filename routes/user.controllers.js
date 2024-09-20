@@ -7,6 +7,7 @@ const jwt = require("../helpers/jwt");
 const sendEmail = require("../helpers/email");
 
 //routes
+router.get("/subjects/:subjectId", jwt(), getAssignmentsBySubject);
 router.get("/fetchsubjects", jwt(), getSubjects);
 router.get("/fetchassignments", jwt(), getAssignments);
 router.post("/login", login);
@@ -104,9 +105,9 @@ async function summary(req, res, next) {
 }
 
 function createSubject(req, res, next) {
+  console.log(req.body);
   const userId = req.user._id;
   const { name } = req.body;
-  console.log("okok", name, userId);
   subjectServices
     .create(name, userId)
     .then((subject) => res.json(subject))
@@ -149,4 +150,20 @@ function getAssignments(req, res, next) {
     .getAll(req.user._id)
     .then((assignments) => res.json(assignments))
     .catch((error) => next(error));
+}
+
+function getAssignmentsBySubject(req, res, next) {
+  const subjectId = req.params.subjectId;
+  const userId = req.user._id;
+
+  assignmentServices
+    .getBySubject(subjectId, userId)
+    .then((assignments) => res.json(assignments))
+    .catch((error) => {
+      console.error("Error fetching assignments for subject:", error);
+      res.status(500).json({
+        message: "Error fetching assignments for subject",
+        error: error.message,
+      });
+    });
 }
