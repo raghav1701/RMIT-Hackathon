@@ -75,10 +75,6 @@ export default function Subjects() {
     }
   };
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
   return (
     <Box
       sx={{
@@ -117,68 +113,83 @@ export default function Subjects() {
           position: "relative",
           zIndex: 1,
           marginTop: "20px",
+          minHeight: "300px",
         }}
       >
-        {subjects.map((subject) => (
-          <Card
-            key={subject._id}
+        {loading ? (
+          <Box
             sx={{
-              width: 300,
-              marginRight: "2rem",
-              marginBottom: "2rem",
-              overflow: "hidden",
-              padding: "0",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "100%",
             }}
           >
-            <CardContent>
-              <Typography
-                level="h2"
-                fontSize="lg"
-                fontWeight="lg"
-                margin="15px 10px 10px 20px"
-              >
-                {subject.name}
-              </Typography>
-            </CardContent>
-            <AspectRatio minHeight="150px" maxHeight="200px">
-              <img
-                src={subject.image}
-                alt={subject.name}
-                style={{ objectFit: "cover", width: "100%", height: "100%" }}
-              />
-            </AspectRatio>
-            <CardContent
-              orientation="horizontal"
+            <CircularProgress />
+          </Box>
+        ) : (
+          subjects.map((subject) => (
+            <Card
+              key={subject._id}
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                margin: "10px 20px 10px 20px",
+                width: 300,
+                marginRight: "2rem",
+                marginBottom: "2rem",
+                overflow: "hidden",
+                padding: "0",
               }}
             >
-              <Typography
-                level="body-md"
+              <CardContent>
+                <Typography
+                  level="h2"
+                  fontSize="lg"
+                  fontWeight="lg"
+                  margin="15px 10px 10px 20px"
+                >
+                  {subject.name}
+                </Typography>
+              </CardContent>
+              <AspectRatio minHeight="150px" maxHeight="200px">
+                <img
+                  src={subject.image}
+                  alt={subject.name}
+                  style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                />
+              </AspectRatio>
+              <CardContent
+                orientation="horizontal"
                 sx={{
-                  color: "red",
-                  fontWeight: "bold",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  margin: "10px 20px 10px 20px",
                 }}
               >
-                Total Due: {subject.assignmentsCount || 0}
-              </Typography>
-              <Link
-                to={`/subjects/${subject.id}`}
-                style={{ textDecoration: "none" }}
-              >
-                <Button
-                  variant="contained"
-                  sx={{ backgroundColor: "#FE9E0D", color: "black" }}
+                <Typography
+                  level="body-md"
+                  sx={{
+                    color: "red",
+                    fontWeight: "bold",
+                  }}
                 >
-                  View Details
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
+                  Total Due: {subject.assignmentsCount || 0}
+                </Typography>
+                <Link
+                  to={`/subjects/${subject._id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "#FE9E0D", color: "black" }}
+                  >
+                    View Details
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </Box>
     </Box>
   );
