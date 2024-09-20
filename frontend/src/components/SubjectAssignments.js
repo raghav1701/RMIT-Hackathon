@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import SubjectAssignmentNavbar from "./AssignmentsNavbar";
+import SubjectAssignmentNavbar from "./SubjectAssignmentNavbar";
 import BannerBackground from "../Assets/home-banner-background.png";
 import Divider from "@mui/material/Divider";
 import { useAuth } from "../AuthContext";

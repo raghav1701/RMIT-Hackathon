@@ -5,7 +5,7 @@ import Button from "@mui/joy/Button";
 import Card from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
-import SubjectAssignmentNavbar from "./AssignmentsNavbar";
+import SubjectAssignmentNavbar from "./SubjectAssignmentNavbar";
 import { Box, CircularProgress } from "@mui/material";
 import BannerBackground from "../Assets/home-banner-background.png";
 import Divider from "@mui/material/Divider";
@@ -116,13 +116,14 @@ export default function Subjects() {
           padding: "2rem",
           position: "relative",
           zIndex: 1,
+          marginTop: "20px",
         }}
       >
         {subjects.map((subject) => (
           <Card
             key={subject._id}
             sx={{
-              width: 320,
+              width: 300,
               marginRight: "2rem",
               marginBottom: "2rem",
               overflow: "hidden",
@@ -139,7 +140,7 @@ export default function Subjects() {
                 {subject.name}
               </Typography>
             </CardContent>
-            <AspectRatio minHeight="200px" maxHeight="200px">
+            <AspectRatio minHeight="150px" maxHeight="200px">
               <img
                 src={subject.image}
                 alt={subject.name}
@@ -169,10 +170,8 @@ export default function Subjects() {
                 style={{ textDecoration: "none" }}
               >
                 <Button
-                  variant="solid"
-                  size="md"
-                  color="primary"
-                  aria-label="View Details"
+                  variant="contained"
+                  sx={{ backgroundColor: "#FE9E0D", color: "black" }}
                 >
                   View Details
                 </Button>

@@ -1,37 +1,42 @@
 import React from "react";
-import { CardActionArea } from "@mui/material"; // Import CardActionArea for clickable areas
-import { useNavigate } from "react-router-dom"; // For navigation
+import { CardActionArea } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import PickMeals from "../Assets/pick-meals-image.png";
 import ChooseMeals from "../Assets/choose-image.png";
 import DeliveryMeals from "../Assets/delivery-image.png";
+import { useAuth } from "../AuthContext";
 
-const Work = () => {
+const Work = ({ setOpenSnackbar }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const workInfoData = [
     {
       image: PickMeals,
       title: "Pick Meals",
       text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et sagittis duis elementum interdum facilisi bibendum.",
-      route: "/subjects", // Route for navigation
+      route: "/subjects",
     },
     {
       image: ChooseMeals,
       title: "Choose How Often",
       text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et ",
-      route: "/choose-how-often", // Route for navigation
+      route: "/choose-how-often",
     },
     {
       image: DeliveryMeals,
       title: "Fast Deliveries",
       text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et lorem ipsum",
-      route: "/fast-deliveries", // Route for navigation
+      route: "/fast-deliveries",
     },
   ];
 
-  // Function to handle card click and navigate to a route
   const handleCardClick = (route) => {
-    navigate(route);
+    if (user) {
+      navigate(route);
+    } else {
+      setOpenSnackbar(true);
+    }
   };
 
   return (

@@ -9,7 +9,7 @@ import Work from "./Work";
 import Testimonial from "./Testimonial";
 import Footer from "./Footer";
 
-const Home = () => {
+const Home = ({ setOpenSnackbar }) => {
   return (
     <>
       <Container>
@@ -37,7 +37,7 @@ const Home = () => {
       </Container>
       <About />
       <Container>
-        <Work />
+        <Work setOpenSnackbar={setOpenSnackbar} />
         <Testimonial />
         <Footer />
       </Container>

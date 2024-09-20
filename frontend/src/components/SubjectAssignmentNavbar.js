@@ -38,18 +38,52 @@ export default function SubjectAssignmentNavbar({ addSubject }) {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "1rem 2rem",
+        padding: "2rem 2rem 0.5rem 2rem",
       }}
     >
-      <Typography variant="h5" fontWeight="bold">
-        My Subjects
-      </Typography>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography sx={{ marginRight: "1rem" }}>
-          Welcome, {user?.firstName || "User"}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          sx={{ margin: "0px 0px 0px 55px" }}
+        >
+          My Subjects
         </Typography>
-        <Button variant="contained" color="primary" onClick={handleClickOpen}>
+        <Button
+          variant="contained"
+          onClick={handleClickOpen}
+          sx={{
+            backgroundColor: "#FE9E0D",
+            color: "black",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            borderRadius: "50px",
+            marginLeft: "50px",
+            fontSize: "12px",
+          }}
+        >
           Add Subject
+        </Button>
+      </Box>
+
+      <Box sx={{ display: "flex", alignItems: "center", gap: "70px" }}>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "white",
+            color: "black",
+            fontWeight: "bold",
+            padding: "15px 25px",
+            borderRadius: "50px",
+            textDecoration: "underline",
+          }}
+        >
+          Logout
         </Button>
       </Box>
 
