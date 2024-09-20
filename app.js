@@ -22,7 +22,7 @@ app.use(cors());
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: "http://localhost:3007", // Allow requests from your frontend origin
+    origin: "http://localhost:3008", // Allow requests from your frontend origin
   })
 );
 
