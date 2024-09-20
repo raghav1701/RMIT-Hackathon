@@ -9,7 +9,7 @@ const conenctionOptions = {
 };
 try {
   mongoose
-    .connect(config.MONGODB_URI, conenctionOptions)
+    .connect(process.env.MONGODB_URI, conenctionOptions)
     .then((res) => console.log(`MOngoDB connected Successfully..!`));
 } catch (error) {
   console.log(`MongoDB Error: `, error.message);

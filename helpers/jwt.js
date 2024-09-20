@@ -9,7 +9,7 @@ function jwt(roles = []) {
     roles = [roles];
     console.log(roles);
   }
-  const secret = config.secret;
+  const secret = process.env.secret;
   return [
     // authenticate JWT token and attach user to request object (req.user)
     expressJwt({ secret, algorithms: ["HS256"] }),
