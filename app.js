@@ -19,6 +19,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
+// Enable CORS for all routes
+app.use(
+  cors({
+    origin: "http://localhost:3007", // Allow requests from your frontend origin
+  })
+);
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
@@ -36,5 +43,5 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-app.listen(3700, () => console.log(`Server is listening on PORT: 3500`));
+app.listen(4000, () => console.log(`Server is listening on PORT: 3500`));
 module.exports = app;
