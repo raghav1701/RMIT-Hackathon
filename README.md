@@ -2,9 +2,9 @@
 
 ## Live Link
 https://switch-csit-hackathon.vercel.app/
-- Dummy Crediantials:
-    - email: raghav170101@gmail.com
-    - password: Raghav@7042
+- Demo Crediantials:
+    - Email: raghav170101@gmail.com
+    - Password: Raghav@7042
 
 ## Overview
 
@@ -12,10 +12,19 @@ MyCampus is a comprehensive web application designed to help students manage the
 
 ## Features
 
-- Assignment Management
+- Assignment Planning and Management
 - Student Networking
-- AI-powered PDF summarization
-- Subject-specific assignment tracking
+- AI-powered Assignment PDF Parser 
+
+## Feature - Assignment Planner
+
+The Assignment Planner feature in MyCampus helps students efficiently manage their assignments and deadlines. It offers a structured approach to organizing tasks, allowing students to break down their workload into manageable steps while staying on top of key due dates. With AI-powered recommendations, the planner also helps prioritize tasks and optimize study schedules, ensuring a more productive and balanced academic experience.
+
+## Feature - Student Networking
+
+The Student Networking feature in MyCampus is designed to help students connect across different universities. It enables users to find peers enrolled in the same course or those with similar hobbies, fostering connections with like-minded individuals. Students can form study groups, collaborate on solving doubts, and engage in inter-university knowledge sharing, creating a supportive and diverse academic community.
+
+
 
 ## Tech Stack
 
