@@ -6,11 +6,18 @@ import {
   CircularProgress,
   Divider,
   Paper,
+  Button,
+  Input,
 } from "@mui/material";
 import AssignmentsNavbar from "./AssignmentsNavbar";
 import AssignmentCard from "./AssignmentCard";
 import BannerBackground from "../Assets/home-banner-background.png";
 import { useAuth } from "../AuthContext";
+import axios from "axios";
+import * as pdfjsLib from "pdfjs-dist/build/pdf";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const API_BASE_URL = "http://localhost:4100/users";
 
@@ -19,6 +26,9 @@ export default function SubjectAssignments() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const [file, setFile] = useState(null);
+  const [extractedText, setExtractedText] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchAssignments();
@@ -62,6 +72,43 @@ export default function SubjectAssignments() {
       setAssignments([...assignments, addedAssignment]);
     } catch (error) {
       console.error("Error adding assignment:", error);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const extractTextFromPdf = async (file) => {
+    const pdfData = await pdfjsLib.getDocument(URL.createObjectURL(file))
+      .promise;
+    let text = "";
+
+    for (let i = 1; i <= pdfData.numPages; i++) {
+      const page = await pdfData.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items.map((item) => item.str).join(" ");
+      text += `${pageText} `;
+    }
+    return text;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const text = await extractTextFromPdf(file);
+      const response = await axios.post("http://localhost:4100/users/summary", {
+        text,
+      });
+      setExtractedText(response.data.summary);
+    } catch (error) {
+      console.error("Error processing or sending text to backend:", error);
+      setExtractedText("An error occurred while processing the PDF.");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -119,7 +166,6 @@ export default function SubjectAssignments() {
           )}
         </Box>
 
-        {/* Right side - Paragraph (40%) */}
         <Box
           sx={{
             width: "40%",
@@ -129,27 +175,58 @@ export default function SubjectAssignments() {
           }}
         >
           <Paper elevation={3} sx={{ padding: "2rem" }}>
-            <Typography variant="h5" gutterBottom>
-              Subject Information
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{ fontWeight: "bold", textAlign: "center" }}
+            >
+              Get Recommendations from AI
             </Typography>
-            <Typography variant="body1" paragraph>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
+            <Typography
+              variant="body1"
+              paragraph
+              sx={{ textAlign: "center", marginBottom: "35px" }}
+            >
+              Just upload your PDF and get AI-powered recommendations.
             </Typography>
-            <Typography variant="body1" paragraph>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-              cupidatat non proident, sunt in culpa qui officia deserunt mollit
-              anim id est laborum.
-            </Typography>
-            <Typography variant="body1">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-              quae ab illo inventore veritatis et quasi architecto beatae vitae
-              dicta sunt explicabo.
-            </Typography>
+            <form onSubmit={handleSubmit}>
+              <Input
+                type="file"
+                accept="application/pdf"
+                onChange={handleFileChange}
+                required
+                sx={{ marginBottom: 2 }}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={uploading}
+                sx={{
+                  backgroundColor: "#FE9E0D",
+                  color: "black",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                  borderRadius: "50px",
+                  fontSize: "12px",
+                }}
+              >
+                {uploading ? "Processing..." : "Upload PDF"}
+              </Button>
+            </form>
+            {uploading && (
+              <Box
+                sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
+            {extractedText && (
+              <Box sx={{ marginTop: 2 }}>
+                <Typography variant="h6">AI Recommendations:</Typography>
+                <Typography variant="body1">{extractedText}</Typography>
+              </Box>
+            )}
           </Paper>
         </Box>
       </Box>
