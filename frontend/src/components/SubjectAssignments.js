@@ -1,19 +1,10 @@
+// SubjectAssignments.jsx
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  CircularProgress,
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "@mui/material";
-import SubjectAssignmentNavbar from "./SubjectAssignmentNavbar";
+import { Box, Typography, CircularProgress, Divider } from "@mui/material";
+import AssignmentsNavbar from "./AssignmentsNavbar";
+import AssignmentCard from "./AssignmentCard";
 import BannerBackground from "../Assets/home-banner-background.png";
-import Divider from "@mui/material/Divider";
 import { useAuth } from "../AuthContext";
 
 const API_BASE_URL = "http://localhost:4100/users";
@@ -22,12 +13,6 @@ export default function SubjectAssignments() {
   const { id } = useParams();
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [newAssignment, setNewAssignment] = useState({
-    title: "",
-    description: "",
-    dueDate: "",
-  });
   const { user } = useAuth();
 
   useEffect(() => {
@@ -41,17 +26,17 @@ export default function SubjectAssignments() {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      if (!response.ok) throw new Error("Failed to fetch subjects");
+      if (!response.ok) throw new Error("Failed to fetch assignments");
       const data = await response.json();
       setAssignments(data);
     } catch (error) {
-      console.error("Error fetching subjects:", error);
+      console.error("Error fetching assignments:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddAssignment = async () => {
+  const handleAddAssignment = async (newAssignment) => {
     try {
       const response = await fetch(
         "http://localhost:4100/users/addassignment",
@@ -70,21 +55,10 @@ export default function SubjectAssignments() {
       if (!response.ok) throw new Error("Failed to add assignment");
       const addedAssignment = await response.json();
       setAssignments([...assignments, addedAssignment]);
-      handleCloseDialog();
     } catch (error) {
       console.error("Error adding assignment:", error);
     }
   };
-
-  const handleOpenDialog = () => setOpenDialog(true);
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setNewAssignment({ title: "", description: "", dueDate: "" });
-  };
-
-  if (loading) {
-    return <CircularProgress />;
-  }
 
   return (
     <Box
@@ -108,81 +82,30 @@ export default function SubjectAssignments() {
           height: "100%",
         }}
       />
-      <SubjectAssignmentNavbar />
+      <AssignmentsNavbar addAssignment={handleAddAssignment} />
       <Divider
         sx={{ width: "100%", borderBottomWidth: 2, margin: "0 70px 0 90px" }}
       />
       <Box sx={{ padding: "2rem", position: "relative", zIndex: 1 }}>
-        {/* <Typography variant="h4">Subject Name: {subjectId?.name}</Typography> */}
-        <Typography variant="h5" sx={{ marginTop: 2 }}>
-          Assignments:
+        <Typography variant="h5" sx={{ marginBottom: 2 }}>
+          Assignments
         </Typography>
-        {assignments.map((assignment) => (
-          <Box key={assignment._id} sx={{ marginTop: 2 }}>
-            <Typography variant="h6">{assignment.title}</Typography>
-            <Typography variant="body1">
-              Due Date: {new Date(assignment.dueDate).toLocaleDateString()}
-            </Typography>
-            <Typography variant="body1">
-              Description: {assignment.description}
-            </Typography>
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "200px",
+            }}
+          >
+            <CircularProgress />
           </Box>
-        ))}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpenDialog}
-          sx={{ marginTop: "20px" }}
-        >
-          Add Assignment
-        </Button>
-
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Add New Assignment</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Title"
-              fullWidth
-              value={newAssignment.title}
-              onChange={(e) =>
-                setNewAssignment({ ...newAssignment, title: e.target.value })
-              }
-            />
-            <TextField
-              margin="dense"
-              label="Description"
-              fullWidth
-              value={newAssignment.description}
-              onChange={(e) =>
-                setNewAssignment({
-                  ...newAssignment,
-                  description: e.target.value,
-                })
-              }
-            />
-            <TextField
-              margin="dense"
-              label="Due Date"
-              type="date"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={newAssignment.dueDate}
-              onChange={(e) =>
-                setNewAssignment({ ...newAssignment, dueDate: e.target.value })
-              }
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button onClick={handleAddAssignment} color="primary">
-              Add
-            </Button>
-          </DialogActions>
-        </Dialog>
+        ) : (
+          assignments.map((assignment) => (
+            <AssignmentCard key={assignment._id} assignment={assignment} />
+          ))
+        )}
       </Box>
     </Box>
   );

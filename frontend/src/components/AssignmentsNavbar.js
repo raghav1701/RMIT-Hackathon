@@ -11,9 +11,13 @@ import {
 } from "@mui/material";
 import { useAuth } from "../AuthContext";
 
-export default function SubjectAssignmentNavbar({ addSubject }) {
+export default function AssignmentsNavbar({ addAssignment }) {
   const [open, setOpen] = useState(false);
-  const [newSubject, setNewSubject] = useState("");
+  const [newAssignment, setNewAssignment] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+  });
   const { user } = useAuth();
 
   const handleClickOpen = () => {
@@ -22,12 +26,12 @@ export default function SubjectAssignmentNavbar({ addSubject }) {
 
   const handleClose = () => {
     setOpen(false);
-    setNewSubject("");
+    setNewAssignment({ title: "", description: "", dueDate: "" });
   };
 
-  const handleAddSubject = () => {
-    if (newSubject.trim()) {
-      addSubject({ name: newSubject.trim() });
+  const handleAddAssignment = () => {
+    if (newAssignment.title.trim() && newAssignment.dueDate) {
+      addAssignment(newAssignment);
       handleClose();
     }
   };
@@ -52,7 +56,7 @@ export default function SubjectAssignmentNavbar({ addSubject }) {
           fontWeight="bold"
           sx={{ margin: "0px 0px 0px 55px" }}
         >
-          My Subjects
+          Assignment Planner
         </Typography>
         <Button
           variant="contained"
@@ -67,7 +71,7 @@ export default function SubjectAssignmentNavbar({ addSubject }) {
             fontSize: "12px",
           }}
         >
-          Add Subject
+          Add Assignment
         </Button>
       </Box>
 
@@ -88,20 +92,47 @@ export default function SubjectAssignmentNavbar({ addSubject }) {
       </Box>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add New Subject</DialogTitle>
+        <DialogTitle>Add New Assignment</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Subject Name"
+            label="Title"
             fullWidth
-            value={newSubject}
-            onChange={(e) => setNewSubject(e.target.value)}
+            value={newAssignment.title}
+            onChange={(e) =>
+              setNewAssignment({ ...newAssignment, title: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Description"
+            fullWidth
+            value={newAssignment.description}
+            onChange={(e) =>
+              setNewAssignment({
+                ...newAssignment,
+                description: e.target.value,
+              })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Due Date"
+            type="date"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={newAssignment.dueDate}
+            onChange={(e) =>
+              setNewAssignment({ ...newAssignment, dueDate: e.target.value })
+            }
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddSubject} color="primary">
+          <Button onClick={handleAddAssignment} color="primary">
             Add
           </Button>
         </DialogActions>
