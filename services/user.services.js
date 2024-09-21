@@ -31,6 +31,7 @@ async function login({ email, password }) {
 }
 
 async function getAll() {
+  console.log("ok");
   return await User.find();
 }
 

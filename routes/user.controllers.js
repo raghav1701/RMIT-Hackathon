@@ -7,6 +7,7 @@ const jwt = require("../helpers/jwt");
 const sendEmail = require("../helpers/email");
 
 //routes
+router.get("/all", getAllUsers);
 router.get("/subjects/:subjectId", jwt(), getAssignmentsBySubject);
 router.get("/fetchsubjects", jwt(), getSubjects);
 router.get("/fetchassignments", jwt(), getAssignments);
@@ -165,5 +166,17 @@ function getAssignmentsBySubject(req, res, next) {
         message: "Error fetching assignments for subject",
         error: error.message,
       });
+    });
+}
+
+function getAllUsers(req, res, next) {
+  userServices
+    .getAll()
+    .then((users) => res.json(users))
+    .catch((error) => {
+      console.error("Error fetching all users:", error);
+      res
+        .status(500)
+        .json({ message: "Error fetching all users", error: error.message });
     });
 }
