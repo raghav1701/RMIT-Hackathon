@@ -192,7 +192,11 @@ const Navbar = () => {
               <Avatar {...stringAvatar(`${user.firstname} ${user.lastname}`)} />
               <span>Welcome, {user.firstname}</span>
             </button>
-            <button className="primary-button" onClick={handleLogout}>
+            <button
+              className="primary-button"
+              onClick={handleLogout}
+              style={{ textDecoration: "underline" }}
+            >
               Logout
             </button>
           </Box>

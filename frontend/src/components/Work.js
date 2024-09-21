@@ -1,9 +1,18 @@
 import React from "react";
-import { CardActionArea } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+  Grid,
+  Container,
+  Button,
+  Box,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import PickMeals from "../Assets/pick-meals-image.png";
-import ChooseMeals from "../Assets/choose-image.png";
-import DeliveryMeals from "../Assets/delivery-image.png";
+import ap from "../Assets/ap.jpg";
+import net from "../Assets/net.png";
 import { useAuth } from "../AuthContext";
 
 const Work = ({ setOpenSnackbar }) => {
@@ -12,22 +21,16 @@ const Work = ({ setOpenSnackbar }) => {
 
   const workInfoData = [
     {
-      image: PickMeals,
-      title: "Pick Meals",
-      text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et sagittis duis elementum interdum facilisi bibendum.",
+      image: ap,
+      title: "Assignment Planner",
+      text: "Stay on top of deadlines, organize your tasks with To-Do lists, and receive AI-powered recommendations for better task management.",
       route: "/subjects",
     },
     {
-      image: ChooseMeals,
-      title: "Choose How Often",
-      text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et ",
+      image: net,
+      title: "Student Networking",
+      text: "Connect with fellow students from your preferred university, course, or hobby to form study groups and share knowledge seamlessly.",
       route: "/networking",
-    },
-    {
-      image: DeliveryMeals,
-      title: "Fast Deliveries",
-      text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et lorem ipsum",
-      route: "/fast-deliveries",
     },
   ];
 
@@ -40,33 +43,85 @@ const Work = ({ setOpenSnackbar }) => {
   };
 
   return (
-    <div className="work-section-wrapper">
-      <div className="work-section-top">
-        <p className="primary-subheading">Work</p>
-        <h1 className="primary-heading">How It Works</h1>
-        <p className="primary-text">
-          Lorem ipsum dolor sit amet consectetur. Non tincidunt magna non et
-          elit. Dolor turpis molestie dui magnis facilisis at fringilla quam.
-        </p>
-      </div>
-      <div className="work-section-bottom">
+    <Container maxWidth="lg" sx={{ my: 4, mt: 20 }}>
+      <Typography
+        variant="subtitle1"
+        align="center"
+        gutterBottom
+        sx={{ fontWeight: "700", color: "#fe9e0d", fontSize: "1.15rem" }}
+      >
+        Work
+      </Typography>
+      <Typography
+        variant="h3"
+        align="center"
+        gutterBottom
+        sx={{
+          fontSize: "clamp(2rem, 5vw, 4rem)",
+          color: "#4c4c4c",
+        }}
+      >
+        How It Works
+      </Typography>
+      <Typography
+        variant="body1"
+        align="center"
+        sx={{ mb: 4, color: "#6a6a6a", fontSize: "clamp(1rem, 3vw, 1.5rem)" }}
+      >
+        At MyCampus, our mission is to foster a supportive community where
+        students can connect, collaborate, and thrive. We believe that academic
+        success is best achieved together, and we're here to support you every
+        step of the way.
+      </Typography>
+
+      <Grid container spacing={3} justifyContent="center">
         {workInfoData.map((data) => (
-          <CardActionArea
-            key={data.title}
-            onClick={() => handleCardClick(data.route)} // Navigate on card click
-            style={{ textDecoration: "none" }} // Optional styling to prevent underline
-          >
-            <div className="work-section-info">
-              <div className="info-boxes-img-container">
-                <img src={data.image} alt={data.title} />
-              </div>
-              <h2>{data.title}</h2>
-              <p>{data.text}</p>
-            </div>
-          </CardActionArea>
+          <Grid item xs={12} sm={6} md={4} key={data.title}>
+            <Card>
+              <CardActionArea onClick={() => handleCardClick(data.route)}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={data.image}
+                  alt={data.title}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {data.title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {data.text}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      my: "20px",
+                    }}
+                  >
+                    <Button
+                      sx={{
+                        backgroundColor: "#FE9E0D",
+                        color: "black",
+                        fontWeight: "bold",
+                        padding: "10px 40px",
+                        borderRadius: "50px",
+                        fontSize: "12px",
+                        "&:hover": {
+                          backgroundColor: "#e08c0b",
+                        },
+                      }}
+                    >
+                      Explore Now
+                    </Button>
+                  </Box>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 

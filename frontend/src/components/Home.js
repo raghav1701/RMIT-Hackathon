@@ -19,16 +19,13 @@ const Home = ({ setOpenSnackbar }) => {
             <img src={BannerBackground} alt="" />
           </div>
           <div className="home-text-section">
-            <h1 className="primary-heading">
-              Your Favourite Food Delivered Hot & Fresh
-            </h1>
+            <h1 className="primary-heading">Manage Deadlines,</h1>
+            <h1 className="primary-heading">Maximize Learning</h1>
             <p className="primary-text">
-              Healthy switcher chefs do all the prep work, like peeding,
-              chopping & marinating, so you can cook a fresh food.
+              Stay organized and connected with our assignment planner and
+              networking platform. Collaborate with peers, manage deadlines, and
+              maximize your learning experience—all in one place.
             </p>
-            <button className="secondary-button">
-              Order Now <FiArrowRight />{" "}
-            </button>
           </div>
           <div className="home-image-section">
             <img src={BannerImage} alt="" />
