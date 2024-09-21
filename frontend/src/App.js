@@ -9,6 +9,8 @@ import SubjectAssignments from "./components/SubjectAssignments";
 import { AuthProvider } from "./AuthContext";
 import ProtectedRoute from "./ProtectedRoute";
 import { Snackbar } from "@mui/material";
+import Profile from "./components/Profile";
+import StudentNetworking from "./components/StudentNetworking";
 
 function App() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -41,11 +43,26 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/choose-how-often" element={<PdfUploader />} />
           <Route path="/fast-deliveries" element={<PdfUploader />} />
           <Route
             path="/"
             element={<Home setOpenSnackbar={setOpenSnackbar} />}
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/networking"
+            element={
+              <ProtectedRoute>
+                <StudentNetworking />
+              </ProtectedRoute>
+            }
           />
         </Routes>
         <Snackbar

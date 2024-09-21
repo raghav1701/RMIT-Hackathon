@@ -21,7 +21,7 @@ const Work = ({ setOpenSnackbar }) => {
       image: ChooseMeals,
       title: "Choose How Often",
       text: "Lorem ipsum dolor sit amet consectetur. Maecenas orci et ",
-      route: "/choose-how-often",
+      route: "/networking",
     },
     {
       image: DeliveryMeals,

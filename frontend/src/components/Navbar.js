@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 function stringToColor(string) {
   let hash = 0;
@@ -54,6 +55,12 @@ const Navbar = () => {
     password: "",
     university: "",
   });
+
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -180,6 +187,7 @@ const Navbar = () => {
                 gap: "8px",
                 padding: "10px 15px",
               }}
+              onClick={handleProfileClick}
             >
               <Avatar {...stringAvatar(`${user.firstname} ${user.lastname}`)} />
               <span>Welcome, {user.firstname}</span>
@@ -194,6 +202,7 @@ const Navbar = () => {
           </button>
         )}
       </div>
+
       <div className="navbar-menu-container">
         <HiOutlineBars3 onClick={() => setOpenMenu(true)} />
       </div>
