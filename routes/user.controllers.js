@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const router = express.Router();
 const userServices = require("../services/user.services");
 const subjectServices = require("../services/subject.services");
@@ -16,6 +17,9 @@ router.post("/register", register);
 router.get("/current", jwt(), getCurrent);
 router.get("/:id", getById);
 router.post("/summary", summary);
+
+// Set the cache directory to a writable location
+process.env.TRANSFORMERS_CACHE = "/tmp/transformers_cache";
 
 // routes for subjects
 router.post("/addsubject", jwt(), createSubject);
@@ -82,7 +86,9 @@ async function summary(req, res, next) {
   try {
     // Use dynamic import here
     const { pipeline } = await import("@xenova/transformers");
-    const pipe = await pipeline("summarization");
+    const pipe = await pipeline("summarization", undefined, {
+      cache_dir: "/tmp/transformers_cache",
+    });
     const result = await pipe(text, {
       max_length: 150,
       min_length: 30,

@@ -110,12 +110,9 @@ export default function SubjectAssignments() {
     setUploading(true);
     try {
       const text = await extractTextFromPdf(file);
-      const response = await axios.post(
-        "https://rmit-hackathon.vercel.app/users/summary",
-        {
-          text,
-        }
-      );
+      const response = await axios.post("http://localhost:4100/users/summary", {
+        text,
+      });
       setExtractedText(response.data.summary);
     } catch (error) {
       console.error("Error processing or sending text to backend:", error);
