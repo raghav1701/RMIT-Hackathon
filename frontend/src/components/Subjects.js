@@ -164,20 +164,11 @@ export default function Subjects() {
                 orientation="horizontal"
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  justifyContent: "right",
                   alignItems: "center",
                   margin: "10px 20px 10px 20px",
                 }}
               >
-                <Typography
-                  level="body-md"
-                  sx={{
-                    color: "red",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Total Due: {subject.assignmentsCount || 0}
-                </Typography>
                 <Link
                   to={`/subjects/${subject.id}`}
                   style={{ textDecoration: "none" }}

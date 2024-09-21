@@ -32,9 +32,10 @@ export default function SubjectAssignments() {
 
   useEffect(() => {
     fetchAssignments();
-  }, []);
+  }, [id, assignments.length]);
 
   const fetchAssignments = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/subjects/${id}`, {
         headers: {
@@ -67,9 +68,18 @@ export default function SubjectAssignments() {
           }),
         }
       );
+
       if (!response.ok) throw new Error("Failed to add assignment");
+
       const addedAssignment = await response.json();
-      setAssignments([...assignments, addedAssignment]);
+
+      setAssignments((prevAssignments) => {
+        console.log("Previous assignments:", prevAssignments);
+        console.log("New assignment:", addedAssignment);
+        return [...prevAssignments, addedAssignment];
+      });
+
+      fetchAssignments();
     } catch (error) {
       console.error("Error adding assignment:", error);
     }
@@ -142,13 +152,12 @@ export default function SubjectAssignments() {
         sx={{ width: "100%", borderBottomWidth: 2, margin: "0 70px 0 90px" }}
       />
       <Box sx={{ display: "flex", position: "relative", zIndex: 1 }}>
-        {/* Left side - Assignments (60%) */}
         <Box
           sx={{
             width: "60%",
             padding: "2rem",
             overflowY: "auto",
-            maxHeight: "calc(100vh - 64px)", // Adjust based on your navbar height
+            maxHeight: "calc(100vh - 64px)",
           }}
         >
           {loading ? (
@@ -174,7 +183,7 @@ export default function SubjectAssignments() {
             width: "40%",
             padding: "2rem",
             overflowY: "auto",
-            maxHeight: "calc(100vh - 64px)", // Adjust based on your navbar height
+            maxHeight: "calc(100vh - 64px)",
           }}
         >
           <Paper elevation={3} sx={{ padding: "2rem" }}>
