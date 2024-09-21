@@ -2,6 +2,9 @@
 
 ## Live Link
 https://switch-csit-hackathon.vercel.app/
+Dummy Crediantials:
+- email: raghav170101@gmail.com
+- password: Raghav@7042
 
 ## Overview
 
