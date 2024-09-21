@@ -1,37 +1,64 @@
 import React, { useState } from "react";
 import MyCampus from "../Assets/MyCampus.svg";
-import { BsCart2 } from "react-icons/bs";
 import { HiOutlineBars3 } from "react-icons/hi2";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
-import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
-import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
+import Avatar from "@mui/material/Avatar";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useAuth } from "../AuthContext";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+  };
+}
 
 const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [openAuth, setOpenAuth] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     email: "",
     password: "",
     university: "",
+  });
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
   });
 
   const { user, login, logout } = useAuth();
@@ -40,14 +67,25 @@ const Navbar = () => {
   const handleAuthClose = () => {
     setOpenAuth(false);
     setFormData({
-      firstName: "",
-      lastName: "",
+      firstname: "",
+      lastname: "",
       email: "",
       password: "",
       university: "",
     });
   };
   const toggleAuthMode = () => setIsLogin(!isLogin);
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbar({ open: true, message, severity });
+  };
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -56,6 +94,7 @@ const Navbar = () => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await fetch(
         "https://rmit-hackathon.vercel.app/users/login",
@@ -71,22 +110,26 @@ const Navbar = () => {
         }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Login failed");
+        throw new Error(data.message || "Login failed");
       }
 
-      const data = await response.json();
-      login(data.user); // Use the login function from context
-      console.log("User logged in:", data);
+      login(data.user);
       handleAuthClose();
+      showSnackbar("Login successful!");
     } catch (error) {
       console.error("Error during login:", error);
-      // Handle login error (e.g., show error message to user)
+      showSnackbar(error.message || "Login failed", "error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await fetch(
         "https://rmit-hackathon.vercel.app/users/register",
@@ -99,22 +142,26 @@ const Navbar = () => {
         }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Signup failed");
+        throw new Error(data.message || "Signup failed");
       }
 
-      const data = await response.json();
-      login(data.user); // Use the login function from context
-      console.log("User signed up:", data);
+      login(data.user);
       handleAuthClose();
+      showSnackbar("Signup successful!");
     } catch (error) {
       console.error("Error during signup:", error);
-      // Handle signup error (e.g., show error message to user)
+      showSnackbar(error.message || "Signup failed", "error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleLogout = () => {
-    logout(); // Use the logout function from context
+    logout();
+    showSnackbar("Logged out successfully");
   };
 
   return (
@@ -124,14 +171,23 @@ const Navbar = () => {
       </div>
       <div className="navbar-links-container">
         {user ? (
-          <>
-            <Typography variant="body1" style={{ marginRight: "15px" }}>
-              Welcome, {user.firstName}
-            </Typography>
+          <Box sx={{ display: "flex", gap: "40px" }}>
+            <button
+              className="primary-button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "10px 15px",
+              }}
+            >
+              <Avatar {...stringAvatar(`${user.firstname} ${user.lastname}`)} />
+              <span>Welcome, {user.firstname}</span>
+            </button>
             <button className="primary-button" onClick={handleLogout}>
               Logout
             </button>
-          </>
+          </Box>
         ) : (
           <button className="primary-button" onClick={handleAuthOpen}>
             Login
@@ -154,23 +210,23 @@ const Navbar = () => {
                 <TextField
                   autoFocus
                   margin="dense"
-                  id="firstName"
+                  id="firstname"
                   label="First Name"
                   type="text"
                   fullWidth
                   variant="outlined"
-                  value={formData.firstName}
+                  value={formData.firstname}
                   onChange={handleInputChange}
                   required
                 />
                 <TextField
                   margin="dense"
-                  id="lastName"
+                  id="lastname"
                   label="Last Name"
                   type="text"
                   fullWidth
                   variant="outlined"
-                  value={formData.lastName}
+                  value={formData.lastname}
                   onChange={handleInputChange}
                   required
                 />
@@ -217,19 +273,44 @@ const Navbar = () => {
               variant="contained"
               color="primary"
               style={{ marginTop: "20px" }}
+              disabled={isLoading} // Disable button while loading
             >
-              {isLogin ? "Login" : "Sign Up"}
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : isLogin ? (
+                "Login"
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
 
           <Typography align="center" style={{ marginTop: "20px" }}>
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <Button color="primary" onClick={toggleAuthMode}>
+            <Button
+              color="primary"
+              onClick={toggleAuthMode}
+              disabled={isLoading}
+            >
               {isLogin ? "Sign Up" : "Login"}
             </Button>
           </Typography>
         </DialogContent>
       </Dialog>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </nav>
   );
 };
