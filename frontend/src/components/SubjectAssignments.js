@@ -19,7 +19,7 @@ import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-const API_BASE_URL = "http://localhost:4100/users";
+const API_BASE_URL = "https://rmit-hackathon.vercel.app/users";
 
 export default function SubjectAssignments() {
   const { id } = useParams();
@@ -54,7 +54,7 @@ export default function SubjectAssignments() {
   const handleAddAssignment = async (newAssignment) => {
     try {
       const response = await fetch(
-        "http://localhost:4100/users/addassignment",
+        "https://rmit-hackathon.vercel.app/users/addassignment",
         {
           method: "POST",
           headers: {
@@ -100,9 +100,12 @@ export default function SubjectAssignments() {
     setUploading(true);
     try {
       const text = await extractTextFromPdf(file);
-      const response = await axios.post("http://localhost:4100/users/summary", {
-        text,
-      });
+      const response = await axios.post(
+        "https://rmit-hackathon.vercel.app/users/summary",
+        {
+          text,
+        }
+      );
       setExtractedText(response.data.summary);
     } catch (error) {
       console.error("Error processing or sending text to backend:", error);

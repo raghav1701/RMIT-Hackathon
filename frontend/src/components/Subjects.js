@@ -29,7 +29,7 @@ export default function Subjects() {
   const fetchSubjects = async () => {
     try {
       const response = await fetch(
-        "http://localhost:4100/users/fetchsubjects",
+        "https://rmit-hackathon.vercel.app/users/fetchsubjects",
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -53,14 +53,17 @@ export default function Subjects() {
 
   const addSubject = async (newSubject) => {
     try {
-      const response = await fetch("http://localhost:4100/users/addsubject", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(newSubject),
-      });
+      const response = await fetch(
+        "https://rmit-hackathon.vercel.app/users/addsubject",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify(newSubject),
+        }
+      );
       if (!response.ok) throw new Error("Failed to add subject");
       const addedSubject = await response.json();
       setSubjects([

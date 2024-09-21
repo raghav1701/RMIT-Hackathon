@@ -37,7 +37,7 @@ const PdfUploader = () => {
       console.log(text);
 
       const response = await axios
-        .post("http://localhost:4000/users/summary", { text })
+        .post("https://rmit-hackathon.vercel.app/users/summary", { text })
         .then((response) => {
           console.log("Upload successful:", response.data);
           setExtractedText(response.data.summary);
