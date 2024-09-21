@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import ap from "../Assets/ap.jpg";
 import net from "../Assets/net.png";
 import { useAuth } from "../AuthContext";
+import aiLogo from "../Assets/ai.png";
 
 const Work = ({ setOpenSnackbar }) => {
   const navigate = useNavigate();
@@ -75,49 +76,64 @@ const Work = ({ setOpenSnackbar }) => {
       </Typography>
 
       <Grid container spacing={3} justifyContent="center">
-        {workInfoData.map((data) => (
+        {workInfoData.map((data, index) => (
           <Grid item xs={12} sm={6} md={4} key={data.title}>
-            <Card>
-              <CardActionArea onClick={() => handleCardClick(data.route)}>
-                <CardMedia
+            <Box sx={{ position: "relative" }}>
+              {index === 0 && (
+                <Box
                   component="img"
-                  height="140"
-                  image={data.image}
-                  alt={data.title}
+                  src={aiLogo}
+                  alt="AI Logo"
+                  sx={{
+                    position: "absolute",
+                    top: -20,
+                    left: -20,
+                    width: 70,
+                    height: 70,
+                    zIndex: 1,
+                  }}
                 />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {data.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {data.text}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      my: "20px",
-                    }}
-                  >
-                    <Button
-                      sx={{
-                        backgroundColor: "#FE9E0D",
-                        color: "black",
-                        fontWeight: "bold",
-                        padding: "10px 40px",
-                        borderRadius: "50px",
-                        fontSize: "12px",
-                        "&:hover": {
-                          backgroundColor: "#e08c0b",
-                        },
-                      }}
+              )}
+              <Card>
+                <CardActionArea onClick={() => handleCardClick(data.route)}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={data.image}
+                    alt={data.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {data.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mb: 2 }}
                     >
-                      Explore Now
-                    </Button>
-                  </Box>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+                      {data.text}
+                    </Typography>
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <Button
+                        sx={{
+                          backgroundColor: "#FE9E0D",
+                          color: "black",
+                          fontWeight: "bold",
+                          padding: "10px 20px",
+                          borderRadius: "50px",
+                          fontSize: "12px",
+                          "&:hover": {
+                            backgroundColor: "#e08c0b",
+                          },
+                        }}
+                      >
+                        Explore Now
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Box>
           </Grid>
         ))}
       </Grid>

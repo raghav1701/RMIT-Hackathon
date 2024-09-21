@@ -8,16 +8,15 @@ const Testimonial = () => {
       <div className="work-section-top">
         <p className="primary-subheading">Testimonial</p>
         <h1 className="primary-heading">What They Are Saying</h1>
-        <p className="primary-text">
-          Lorem ipsum dolor sit amet consectetur. Non tincidunt magna non et
-          elit. Dolor turpis molestie dui magnis facilisis at fringilla quam.
-        </p>
       </div>
       <div className="testimonial-section-bottom">
         <img src={ProfilePic} alt="" />
         <p>
-          Lorem ipsum dolor sit amet consectetur. Non tincidunt magna non et
-          elit. Dolor turpis molestie dui magnis facilisis at fringilla quam.
+          Using MyCampus has completely transformed the way I manage my
+          assignments and connect with other students. The AI-powered task
+          recommendations are a game-changer, and being able to join study
+          groups with students who share my interests has made a huge difference
+          in my academic journey. I feel more organized and supported than ever!
         </p>
         <div className="testimonials-stars-container">
           <AiFillStar />
