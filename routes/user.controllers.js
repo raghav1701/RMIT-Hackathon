@@ -18,6 +18,9 @@ router.get("/current", jwt(), getCurrent);
 router.get("/:id", getById);
 router.post("/summary", summary);
 
+export const maxDuration = 300;
+export const dynamic = "force-dynamic";
+
 // Set the cache directory to a writable location
 process.env.TRANSFORMERS_CACHE = "/tmp/transformers_cache";
 
