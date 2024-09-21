@@ -1,5 +1,8 @@
 # MyCampus - Student Assignment Planner and Networking Platform
 
+## Live Link
+https://switch-csit-hackathon.vercel.app/
+
 ## Overview
 
 MyCampus is a comprehensive web application designed to help students manage their assignments and connect with peers. It features an AI-powered assignment planner and a student networking platform.
@@ -151,6 +154,3 @@ The application is configured for deployment on Vercel. Ensure all environment v
 
 Contributions are welcome! Please fork the repository and create a pull request with your features or fixes.
 
-## License
-
-[Specify your license here]
